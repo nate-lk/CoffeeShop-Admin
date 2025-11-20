@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+select,
+input,
+textarea {
+  border: 1px solid;
+  outline-color: brown;
+  border-radius: 4px;
+}
+
+@font-face {
+  font-family: 'MyFont';
+  src: url('./assets/MyFont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: 'MyFont', sans-serif !important;
+}
+
+/* 
+@keyframes loading-bar {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 1.5s ease-in-out infinite;
+} */
+
+[data-admin-root] {
+  position: static !important;
+  z-index: auto !important;
+}
