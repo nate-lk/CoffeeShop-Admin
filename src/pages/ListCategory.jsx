@@ -1,21 +1,16 @@
 import React, { useEffect, useState, useContext } from "react";
-import { backendUrl } from "../App";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { AdminContext } from "../../context/AdminContext";
 import { Edit, Trash } from "lucide-react";
+import { categoryApi } from "../../api/category-api";
 
 const ListCategory = () => {
-  const { token } = useContext(AdminContext);
   const navigate = useNavigate();
-  const API_get = `http://localhost:4000/api/category/get`;
-  const API_delete = `http://localhost:4000/api/category/delete`;
   const [list, setList] = useState([]);
 
   const fetchList = async () => {
     try {
-      const response = await axios.get(API_get);
+      const response = await categoryApi.getCategory();
       if (response.data.success) {
         setList(response.data.category);
       } else {
@@ -29,10 +24,7 @@ const ListCategory = () => {
 
   const removeCategory = async (id) => {
     try {
-      const response = await axios.delete(API_delete, {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { id },
-      });
+      const response = await categoryApi.deleteCategory(id);
 
       if (response.data.success) {
         toast.success(response.data.message);

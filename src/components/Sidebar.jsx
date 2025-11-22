@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { Wrench } from "lucide-react";
 
 const Sidebar = () => {
   const baseLinkStyle =
@@ -19,6 +20,10 @@ const Sidebar = () => {
 
       {/* Nav Section */}
       <div className="flex flex-col gap-3 px-4 pt-6 text-sm">
+        {/* PRODUCT */}
+        <span>
+          <strong>Sản phẩm</strong>
+        </span>
         <NavLink
           to="/list"
           className={({ isActive }) =>
@@ -38,7 +43,10 @@ const Sidebar = () => {
           <img className="w-5 h-5 opacity-80" src={assets.add_icon} alt="" />
           <span className="hidden md:block">Thêm SP</span>
         </NavLink>
-
+        {/* CATEGORY */}
+        <span>
+          <strong>Phân loại</strong>
+        </span>
         <NavLink
           to="/list-category"
           className={({ isActive }) =>
@@ -46,9 +54,7 @@ const Sidebar = () => {
           }
         >
           <img className="w-5 h-5 opacity-80" src={assets.order_icon} alt="" />
-          <span className="hidden md:block">
-            Phân loại
-          </span>
+          <span className="hidden md:block">Phân loại</span>
         </NavLink>
 
         <NavLink
@@ -61,6 +67,9 @@ const Sidebar = () => {
           <span className="hidden md:block">Thêm phân loại</span>
         </NavLink>
 
+        <span>
+          <strong>Đơn hàng</strong>
+        </span>
         <NavLink
           to="/orders"
           className={({ isActive }) =>
@@ -69,6 +78,19 @@ const Sidebar = () => {
         >
           <img className="w-5 h-5 opacity-80" src={assets.order_icon} alt="" />
           <span className="hidden md:block">Đơn hàng</span>
+        </NavLink>
+
+        <span>
+          <strong>Quản lý</strong>
+        </span>
+        <NavLink
+          to="/utilities"
+          className={({ isActive }) =>
+            `${baseLinkStyle} ${isActive ? activeLinkStyle : ""}`
+          }
+        >
+          <Wrench className="w-6 h-6 opacity-80" />
+          <span className="hidden md:block">Tiện ích</span>
         </NavLink>
       </div>
     </div>

@@ -5,29 +5,29 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
 import { Edit, Trash } from "lucide-react";
+import { productApi } from "../../api/product-api";
 
 const List = () => {
   const { token, currency, setLoading } = useContext(AdminContext);
   const navigate = useNavigate();
-  const API_get = "http://localhost:4000/api/product/get";
   const API_delete = "http://localhost:4000/api/product/delete";
-
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
   const [list, setList] = useState([]);
 
   const fetchList = async () => {
     try {
-      // setLoading(true);
-      const response = await axios.get(API_get);
+      const response = await productApi.getProduct(page, limit);
       if (response.data.success) {
         setList(response.data.products);
+        setTotalPages(response.data.totalPages);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
       toast.error(error.message);
-    } finally {
-      // setLoading(false);
     }
   };
 
@@ -59,11 +59,28 @@ const List = () => {
 
   useEffect(() => {
     fetchList();
-  }, []);
+  }, [page, limit]);
 
   return (
     <div className="p-4">
       <p className="mb-4 text-lg font-semibold">Danh Mục Sản Phẩm</p>
+
+      <div className="mb-4 flex items-center gap-2">
+        <span className="text-sm text-gray-600">Hiển thị:</span>
+        <select
+          className="border px-2 py-1 text-sm"
+          value={limit}
+          onChange={(e) => {
+            setLimit(Number(e.target.value));
+            setPage(1);
+          }}
+        >
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
+        <span className="text-sm text-gray-600">mỗi trang</span>
+      </div>
 
       <div className="overflow-x-auto border  shadow-sm">
         {/* Header */}
@@ -117,6 +134,23 @@ const List = () => {
             Không tìm thấy sản phẩm nào
           </p>
         )}
+      </div>
+      <div className="flex items-center gap-2 mt-4">
+        <span className="text-sm text-gray-600">Trang:</span>
+
+        <select
+          className="border px-2 py-1 text-sm"
+          value={page}
+          onChange={(e) => setPage(Number(e.target.value))}
+        >
+          {Array.from({ length: totalPages }, (_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+
+        <span className="text-sm text-gray-600">/ {totalPages}</span>
       </div>
     </div>
   );

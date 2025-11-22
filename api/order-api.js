@@ -15,11 +15,11 @@ export const orderApi = {
     return apiAuth.get(`${BASE}/get-one/${orderId}`)
   },
 
-  confirmPayment(orderId) {
-    return apiAuth.put(`${BASE}/confirm-payment/${orderId}`);
+  confirmPayment(orderId, items) {
+    return apiAuth.put(`${BASE}/confirm-payment/${orderId}`, { items });
   },
 
   cancelOrder(orderId) {
     return apiAuth.put(`${BASE}/cancel/${orderId}`);
-  }
+  },
 };

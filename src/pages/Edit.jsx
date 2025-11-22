@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { assets } from "../assets/assets";
-import axios from "axios";
-import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
+import { productApi } from "../../api/product-api";
+import { categoryApi } from "../../api/category-api";
 
 const Edit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { token, setLoading } = useContext(AdminContext);
+  const { setLoading } = useContext(AdminContext);
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
@@ -33,9 +33,7 @@ const Edit = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/product/fetch/${id}`
-      );
+      const response = await productApi.getOneProduct(id);
       if (response.data.success) {
         const product = response.data.product;
 
@@ -76,9 +74,7 @@ const Edit = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/category/get`
-        );
+        const response = await categoryApi.getCategory();
         if (response.data.success) {
           const categories = response.data.category || [];
           setCategoryList(categories);
@@ -115,11 +111,7 @@ const Edit = () => {
       image3 && formData.append("image3", image3);
       image4 && formData.append("image4", image4);
 
-      const response = await axios.put(
-        "http://localhost:4000/api/product/edit/" + id,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await productApi.updateProduct(id, formData);
 
       if (response.data.success) {
         toast.success(response.data.message);

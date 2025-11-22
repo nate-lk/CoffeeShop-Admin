@@ -12,8 +12,12 @@ const BASE = import.meta.env.VITE_API_PRODUCT;
 // http://locahost:4000/api/product
 
 export const productApi = {
-  getProduct() {
-    return apiPublic.get(`${BASE}/get`);
+  getProduct(page, limit) {
+    return apiPublic.get(`${BASE}/get`,
+      {
+        params: { page, limit }
+      }
+    );
   },
 
   getOneProduct(productId) {
@@ -31,10 +35,11 @@ export const productApi = {
   },
 
   updateProduct(productId, formData) {
-    return apiAuth.post(`${BASE}/edit/${productId}`, formData, {
+    return apiAuth.put(`${BASE}/edit/${productId}`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
   },
+
 
   // deleteProduct(productId) {
   //   return apiAuth.delete(`${BASE}/stock/${productId}`);

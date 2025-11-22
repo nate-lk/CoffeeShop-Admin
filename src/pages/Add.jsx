@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
-import axios from "axios";
-import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 import { AdminContext } from "../../context/AdminContext";
+import { categoryApi } from "../../api/category-api";
+import { productApi } from "../../api/product-api";
 
 const Add = () => {
   const navigate = useNavigate();
-  const { token, setLoading } = useContext(AdminContext); //for the loading screen
+  const { setLoading } = useContext(AdminContext); //for the loading screen
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
@@ -34,9 +34,7 @@ const Add = () => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/category/get`
-        );
+        const response = await categoryApi.getCategory();
         if (response.data.success) {
           const categories = response.data.category || [];
           setCategoryList(categories);
@@ -78,11 +76,7 @@ const Add = () => {
       image3 && formData.append("image3", image3);
       image4 && formData.append("image4", image4);
 
-      const response = await axios.post(
-        "http://localhost:4000/api/product/add",
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await productApi.addProduct(formData);
       if (response.data.success) {
         toast.success(response.data.message);
         setName("");

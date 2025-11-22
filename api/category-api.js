@@ -27,12 +27,16 @@ export const categoryApi = {
   },
 
   updateCategory(categoryId, formData) {
-    return apiAuth.post(`${BASE}/edit/${categoryId}`, formData, {
+    return apiAuth.put(`${BASE}/edit/${categoryId}`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
   },
 
-  // deleteCategory(categoryId) {
-  //   return apiAuth.delete(`${BASE}/delete/${categoryId}`);
-  // }
+  deleteCategory(categoryId) {
+    return apiAuth.delete(`${BASE}/delete/${categoryId}`);
+  },
+
+  recountCategory() {
+    return apiAuth.post(`${BASE}/recount`);
+  }
 };

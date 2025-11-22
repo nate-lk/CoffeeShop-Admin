@@ -1,14 +1,13 @@
 import React, { useState, useContext } from "react";
 import { assets } from "../assets/assets";
-import axios from "axios";
-import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 import { AdminContext } from "../../context/AdminContext";
 import { useNavigate } from "react-router-dom";
+import { categoryApi } from "../../api/category-api";
 
 const AddCategory = () => {
   const navigate = useNavigate();
-  const { token, setLoading } = useContext(AdminContext);
+  const { setLoading } = useContext(AdminContext);
   const [image1, setImage1] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -22,11 +21,7 @@ const AddCategory = () => {
       formData.append("description", description);
       image1 && formData.append("image1", image1);
 
-      const response = await axios.post(
-        `http://localhost:4000/api/category/add`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await categoryApi.addCategory(formData);
 
       if (response.data.success) {
         toast.success(response.data.message);
@@ -46,7 +41,7 @@ const AddCategory = () => {
   };
 
   return (
-    <div className="bg-white p-6   shadow-md w-full max-w-2xl mx-auto">
+    <div className="bg-white p-6 shadow-md w-full max-w-2xl mx-auto">
       <h1 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
         Thêm Phân Loại
       </h1>

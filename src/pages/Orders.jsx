@@ -175,7 +175,7 @@ const Orders = () => {
 
             {/* ----------------- REAL DATA -------------------- */}
             {!loading &&
-              [...filteredOrders].reverse().map((order, index) => (
+              [...filteredOrders].map((order, index) => (
                 <tr
                   key={order.orderId}
                   className="border-b hover:bg-gray-50 transition-colors"

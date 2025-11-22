@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { assets } from "../assets/assets";
-import axios from "axios";
-import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
 import { useNavigate } from "react-router-dom";
+import { categoryApi } from "../../api/category-api";
 
 const EditCategory = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
-  const { token, setLoading } = useContext(AdminContext);
+  const { setLoading } = useContext(AdminContext);
 
   const [image1, setImage1] = useState(false);
   const [name, setName] = useState("");
@@ -18,9 +17,7 @@ const EditCategory = () => {
 
   const fetchCategory = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:4000/api/category/fetch/${categoryId}`
-      );
+      const res = await categoryApi.getOneCategory(categoryId);
       if (res.data.success) {
         const cat = res.data.category;
 
@@ -52,11 +49,7 @@ const EditCategory = () => {
       formData.append("description", description);
       image1 && formData.append("image1", image1);
 
-      const response = await axios.put(
-        `http://localhost:4000/api/category/edit/` + categoryId,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await categoryApi.updateCategory(categoryId, formData);
 
       if (response.data.success) {
         toast.success(response.data.message);
