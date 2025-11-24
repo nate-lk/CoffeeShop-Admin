@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
-import { Wrench } from "lucide-react";
+import { Wrench, Flag } from "lucide-react";
 
 const Sidebar = () => {
   const baseLinkStyle =
@@ -12,14 +12,21 @@ const Sidebar = () => {
   return (
     <div className="w-[18%] min-h-screen border-r border-[#a1887f] bg-[#f8f3ef] shadow-inner flex flex-col">
       {/* Header */}
-      <div className="p-6 pb-4 border-b border-[#d7ccc8]">
-        <h2 className="text-xl font-semibold tracking-wide text-[#4e342e] hidden md:block">
-          Dashboard
-        </h2>
-      </div>
 
       {/* Nav Section */}
       <div className="flex flex-col gap-3 px-4 pt-6 text-sm">
+        <span>
+          <strong>Dashboard</strong>
+        </span>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `${baseLinkStyle} ${isActive ? activeLinkStyle : ""}`
+          }
+        >
+          <Flag size={16} className="w-6 h-6 opacity-80"/>
+          <span className="hidden md:block">Báo cáo</span>
+        </NavLink>
         {/* PRODUCT */}
         <span>
           <strong>Sản phẩm</strong>

@@ -3,8 +3,10 @@ import { toast } from "react-toastify";
 import { AdminContext } from "../../context/AdminContext";
 import { useContext } from "react";
 import { adminApi } from "../../api/admin-api";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setLoading, setToken } = useContext(AdminContext);
@@ -20,6 +22,7 @@ const Login = () => {
         setEmail("");
         setPassword("");
         toast.success("Đăng nhập Admin thành công");
+        navigate("/");
       } else {
         toast.error(response.data.message);
       }
