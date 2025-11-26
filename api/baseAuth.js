@@ -46,16 +46,19 @@ api.interceptors.response.use(
 
     isRefreshing = true;
     try {
-      const res = await refreshApi.post(BASE_REFRESH);
-      const newToken = res.data.accessToken;
+      const newToken = await tryRefresh(2); // 2 attempts
 
       localStorage.setItem("token", newToken);
       api.defaults.headers.Authorization = `Bearer ${newToken}`;
       resolveQueue(null, newToken);
+
       return api(original);
     } catch (refreshError) {
       resolveQueue(refreshError, null);
+
+      // Only delete after retries fail
       localStorage.removeItem("token");
+
       const confirm = await Swal.fire({
         text: "Phiên đăng nhập đã hết hạn. Xin đăng nhập lại.",
         icon: "warning",
@@ -64,8 +67,9 @@ api.interceptors.response.use(
         confirmButtonText: "Đăng nhập lại",
         width: "300px",
       });
-      if (!confirm.isConfirmed) return;
-      window.location.href = "/login";
+
+      if (confirm.isConfirmed) window.location.href = "/login";
+
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
