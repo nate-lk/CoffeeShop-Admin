@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Login from "./components/Login.jsx";
+import useClickGuard from "./utilities/clickGuard.js";
 
 import {
   Add,
@@ -26,7 +27,8 @@ export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const { token } = useContext(AdminContext);
-
+  useClickGuard(250);
+  
   return (
     <div className="bg-gray-50 min-h-screen">
       <ToastContainer position="top-left" autoClose={1200} />
