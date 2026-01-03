@@ -5,7 +5,14 @@ import { useParams } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
 import { useNavigate } from "react-router-dom";
 import { categoryApi } from "../../api/category-api";
-import { Edit, Upload, Type, FileText, CheckCircle, Image as ImageIcon } from "lucide-react";
+import {
+  Edit,
+  Upload,
+  Type,
+  FileText,
+  CheckCircle,
+  Image as ImageIcon,
+} from "lucide-react";
 
 const EditCategory = () => {
   const { categoryId } = useParams();
@@ -79,58 +86,63 @@ const EditCategory = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
-      
       {/* Header */}
       <div className="w-full max-w-2xl mb-6">
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <Edit className="text-amber-700" /> Chỉnh sửa phân loại
         </h1>
-        <p className="text-gray-500 text-sm mt-1">Cập nhật thông tin và hình ảnh cho danh mục này.</p>
+        <p className="text-gray-500 text-sm mt-1">
+          Cập nhật thông tin và hình ảnh cho danh mục này.
+        </p>
       </div>
 
       {/* Main Card */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 w-full max-w-2xl">
         <form onSubmit={onSubmitHandler} className="space-y-8">
-          
           {/* Image Upload Section */}
           <div className="space-y-3">
-             <label className="block text-sm font-bold text-gray-700 flex items-center gap-2">
-                <ImageIcon size={16} className="text-gray-400" /> Hình ảnh đại diện <span className="text-red-500">*</span>
-             </label>
-             
-             <label
-              htmlFor="image1"
-              className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-amber-400 transition-all relative overflow-hidden group"
-            >
-              {/* Image Preview */}
-              <img
-                className="w-full h-full object-contain p-4 transition-transform group-hover:scale-105"
-                src={renderPreview()}
-                alt="Category Preview"
-              />
-              
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center">
-                 <div className="bg-white/90 p-3 rounded-full opacity-0 group-hover:opacity-100 shadow-sm transition-opacity">
+            <label className="block text-sm font-bold text-gray-700 flex items-center gap-2">
+              <ImageIcon size={16} className="text-gray-400" /> Hình ảnh đại
+              diện <span className="text-red-500">*</span>
+            </label>
+
+            <div className="relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-2xl hover:bg-gray-50 hover:border-amber-400 transition-all overflow-hidden group">
+              {/* Visual Content - Added pointer-events-none to prevent blocking clicks */}
+              <div className="pointer-events-none w-full h-full flex items-center justify-center relative">
+                {/* Image Preview */}
+                <img
+                  className="w-full h-full object-contain p-4 transition-transform group-hover:scale-105"
+                  src={renderPreview()}
+                  alt="Category Preview"
+                />
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center">
+                  <div className="bg-white/90 p-3 rounded-full opacity-0 group-hover:opacity-100 shadow-sm transition-opacity">
                     <Upload size={20} className="text-amber-700" />
-                 </div>
+                  </div>
+                </div>
               </div>
-              
+
+              {/* The Fix: Invisible Input Overlay */}
               <input
                 onChange={(e) => setImage1(e.target.files[0])}
                 type="file"
                 id="image1"
-                hidden
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
-            </label>
-            <p className="text-xs text-center text-gray-400">Nhấn vào ảnh để thay đổi</p>
+            </div>
+            <p className="text-xs text-center text-gray-400">
+              Nhấn vào ảnh để thay đổi
+            </p>
           </div>
 
           <div className="grid gap-6">
             {/* Name Input */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                 <Type size={16} className="text-gray-400" /> Tên phân loại <span className="text-red-500">*</span>
+                <Type size={16} className="text-gray-400" /> Tên phân loại{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 onChange={(e) => setName(e.target.value)}
@@ -145,7 +157,8 @@ const EditCategory = () => {
             {/* Description Input */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                 <FileText size={16} className="text-gray-400" /> Mô tả <span className="text-red-500">*</span>
+                <FileText size={16} className="text-gray-400" /> Mô tả{" "}
+                <span className="text-red-500">*</span>
               </label>
               <textarea
                 onChange={(e) => setDescription(e.target.value)}
@@ -166,7 +179,6 @@ const EditCategory = () => {
             <CheckCircle size={20} />
             LƯU THAY ĐỔI
           </button>
-
         </form>
       </div>
     </div>

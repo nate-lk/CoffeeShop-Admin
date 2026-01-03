@@ -4,23 +4,23 @@ import { toast } from "sonner";
 import { AdminContext } from "../../context/AdminContext";
 import { categoryApi } from "../../api/category-api";
 import { productApi } from "../../api/product-api";
-import { 
-  Upload, 
-  Package, 
-  DollarSign, 
-  Layers, 
-  FileText, 
-  Tag, 
+import {
+  Upload,
+  Package,
+  DollarSign,
+  Layers,
+  FileText,
+  Tag,
   CheckCircle,
   Box,
   ShieldCheck,
-  Image as ImageIcon
+  Image as ImageIcon,
 } from "lucide-react";
 
 const Add = () => {
   const navigate = useNavigate();
   const { setLoading } = useContext(AdminContext);
-  
+
   // --- STATE (UNCHANGED) ---
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
@@ -130,24 +130,27 @@ const Add = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between mb-8 max-w-6xl mx-auto">
         <div>
-           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-             <Package className="text-amber-700" /> Thêm sản phẩm mới
-           </h1>
-           <p className="text-gray-500 text-sm mt-1">Điền thông tin chi tiết để tạo sản phẩm.</p>
+          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <Package className="text-amber-700" /> Thêm sản phẩm mới
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Điền thông tin chi tiết để tạo sản phẩm.
+          </p>
         </div>
       </div>
 
-      <form onSubmit={onSubmitHandler} className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+      <form
+        onSubmit={onSubmitHandler}
+        className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8"
+      >
         {/* === LEFT COLUMN (Main Content) === */}
         <div className="lg:col-span-2 space-y-6">
-          
           {/* 1. Basic Information Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <FileText size={18} /> Thông tin cơ bản
             </h2>
-            
+
             <div className="space-y-4">
               {/* Product Name */}
               <div>
@@ -166,39 +169,42 @@ const Add = () => {
 
               {/* Brand & Category Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Thương hiệu <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      onChange={(e) => setBrand(e.target.value)}
-                      value={brand}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
-                      type="text"
-                      placeholder="VD: Trung Nguyên"
-                      required
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    Thương hiệu <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    onChange={(e) => setBrand(e.target.value)}
+                    value={brand}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
+                    type="text"
+                    placeholder="VD: Trung Nguyên"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    Danh mục <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <Layers
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      size={18}
                     />
-                 </div>
-                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Danh mục <span className="text-red-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <Layers className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                      <select
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none appearance-none bg-white"
-                        onChange={(e) => setCategory(e.target.value)}
-                        value={category}
-                        required
-                      >
-                        {categoryList.map((cat) => (
-                          <option key={cat._id} value={cat.name}>
-                            {cat.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                 </div>
+                    <select
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none appearance-none bg-white"
+                      onChange={(e) => setCategory(e.target.value)}
+                      value={category}
+                      required
+                    >
+                      {categoryList.map((cat) => (
+                        <option key={cat._id} value={cat.name}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
               {/* Descriptions */}
@@ -214,7 +220,7 @@ const Add = () => {
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                   Mô tả chi tiết
@@ -231,167 +237,184 @@ const Add = () => {
 
           {/* 2. Media Upload Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <ImageIcon size={18} /> Hình ảnh sản phẩm
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[image1, image2, image3, image4].map((img, i) => (
-                <label 
-                  key={i} 
-                  htmlFor={`image${i + 1}`}
-                  className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-amber-400 transition-all relative overflow-hidden group"
+                <div
+                  key={i}
+                  className="relative aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl hover:bg-gray-50 hover:border-amber-400 transition-all overflow-hidden group"
                 >
-                  {!img ? (
-                    <>
-                      <Upload className="text-gray-400 group-hover:text-amber-600 mb-2" />
-                      <span className="text-xs text-gray-500 font-medium">Tải ảnh {i + 1}</span>
-                    </>
-                  ) : (
-                    <img
-                      className="w-full h-full object-cover"
-                      src={URL.createObjectURL(img)}
-                      alt={`Product ${i + 1}`}
-                    />
-                  )}
-                  
-                  {/* Hidden Input */}
+                  {/* Visual Content (Icons & Preview) - Pointer events none so clicks pass through to input */}
+                  <div className="pointer-events-none flex flex-col items-center justify-center w-full h-full">
+                    {!img ? (
+                      <>
+                        <Upload className="text-gray-400 group-hover:text-amber-600 mb-2 transition-colors" />
+                        <span className="text-xs text-gray-500 font-medium">
+                          Tải ảnh {i + 1}
+                        </span>
+                      </>
+                    ) : (
+                      <img
+                        className="w-full h-full object-contain"
+                        src={
+                          typeof img === "string"
+                            ? img
+                            : URL.createObjectURL(img)
+                        }
+                        alt={`Product ${i + 1}`}
+                      />
+                    )}
+                  </div>
+
+                  {/* The Fix: Invisible Input Overlay */}
                   <input
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      if (i === 0) setImage1(file);
-                      if (i === 1) setImage2(file);
-                      if (i === 2) setImage3(file);
-                      if (i === 3) setImage4(file);
+                      if (file) {
+                        if (i === 0) setImage1(file);
+                        if (i === 1) setImage2(file);
+                        if (i === 2) setImage3(file);
+                        if (i === 3) setImage4(file);
+                      }
                     }}
                     type="file"
                     id={`image${i + 1}`}
-                    hidden
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
-                </label>
+                </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-2">* Hình ảnh đầu tiên sẽ là ảnh đại diện</p>
+            <p className="text-xs text-gray-400 mt-2">
+              * Hình ảnh đầu tiên sẽ là ảnh đại diện
+            </p>
           </div>
 
           {/* 3. Shipping & Warranty Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <Box size={18} /> Vận chuyển & Bảo hành
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Hình thức đóng gói <span className="text-red-500">*</span>
-                  </label>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Hình thức đóng gói <span className="text-red-500">*</span>
+                </label>
+                <input
+                  onChange={(e) => setPackageType(e.target.value)}
+                  value={packageType}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
+                  type="text"
+                  placeholder="VD: Hộp giấy, Túi zip..."
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Bảo hành
+                </label>
+                <div className="relative">
+                  <ShieldCheck
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
                   <input
-                    onChange={(e) => setPackageType(e.target.value)}
-                    value={packageType}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
+                    onChange={(e) => setWarranty(e.target.value)}
+                    value={warranty}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
                     type="text"
-                    placeholder="VD: Hộp giấy, Túi zip..."
-                    required
+                    placeholder="VD: 12 tháng"
                   />
                 </div>
-                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Bảo hành
-                  </label>
-                  <div className="relative">
-                    <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                    <input
-                      onChange={(e) => setWarranty(e.target.value)}
-                      value={warranty}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
-                      type="text"
-                      placeholder="VD: 12 tháng"
-                    />
-                  </div>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Chi tiết đóng gói
-                  </label>
-                  <textarea
-                    onChange={(e) => setPackageDetail(e.target.value)}
-                    value={packageDetail}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none h-20"
-                    placeholder="Quy cách đóng gói chi tiết..."
-                  />
-                </div>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Chi tiết đóng gói
+                </label>
+                <textarea
+                  onChange={(e) => setPackageDetail(e.target.value)}
+                  value={packageDetail}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none h-20"
+                  placeholder="Quy cách đóng gói chi tiết..."
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/* === RIGHT COLUMN (Sidebar) === */}
         <div className="space-y-6">
-          
           {/* 4. Pricing & Inventory Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <DollarSign size={18} /> Giá & Kho
             </h2>
-            
+
             <div className="space-y-4">
-               {/* Price */}
-               <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Giá bán (VNĐ) <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    onChange={(e) => setPrice(e.target.value)}
-                    value={price}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none font-medium"
-                    type="number"
-                    required
-                  />
-               </div>
+              {/* Price */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Giá bán (VNĐ) <span className="text-red-500">*</span>
+                </label>
+                <input
+                  onChange={(e) => setPrice(e.target.value)}
+                  value={price}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none font-medium"
+                  type="number"
+                  required
+                />
+              </div>
 
-               {/* Discount */}
-               <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Giảm giá (%)
-                  </label>
-                  <input
-                    onChange={(e) => setDiscount(e.target.value)}
-                    value={discount}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
-                    type="number"
-                    placeholder="0"
-                  />
-               </div>
+              {/* Discount */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Giảm giá (%)
+                </label>
+                <input
+                  onChange={(e) => setDiscount(e.target.value)}
+                  value={discount}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
+                  type="number"
+                  placeholder="0"
+                />
+              </div>
 
-               {/* Stock */}
-               <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Tồn kho <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    onChange={(e) => setStock(e.target.value)}
-                    value={stock}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
-                    type="number"
-                    required
-                  />
-               </div>
+              {/* Stock */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Tồn kho <span className="text-red-500">*</span>
+                </label>
+                <input
+                  onChange={(e) => setStock(e.target.value)}
+                  value={stock}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
+                  type="number"
+                  required
+                />
+              </div>
             </div>
           </div>
 
           {/* 5. Organization / Bestseller Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-               <Tag size={18} /> Trạng thái
+              <Tag size={18} /> Trạng thái
             </h2>
-            
+
             <div className="flex items-center gap-3 p-3 border border-amber-100 bg-amber-50/50 rounded-xl cursor-pointer hover:bg-amber-100 transition-colors">
-               <input
+              <input
                 type="checkbox"
                 id="bestseller"
                 onChange={(e) => setBestseller(e.target.checked)}
                 checked={bestseller}
                 className="w-5 h-5 text-amber-700 border-gray-300 rounded focus:ring-amber-500 cursor-pointer accent-amber-700"
               />
-              <label htmlFor="bestseller" className="flex-1 cursor-pointer font-medium text-gray-800 text-sm select-none">
-                 Sản phẩm bán chạy (Bestseller)
+              <label
+                htmlFor="bestseller"
+                className="flex-1 cursor-pointer font-medium text-gray-800 text-sm select-none"
+              >
+                Sản phẩm bán chạy (Bestseller)
               </label>
             </div>
           </div>
@@ -401,10 +424,9 @@ const Add = () => {
             type="submit"
             className="w-full py-4 bg-[#3e2723] hover:bg-[#5d4037] text-white font-bold rounded-2xl shadow-lg shadow-amber-900/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
           >
-             <CheckCircle size={20} />
-             XÁC NHẬN THÊM
+            <CheckCircle size={20} />
+            XÁC NHẬN THÊM
           </button>
-
         </div>
       </form>
     </div>
