@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { AdminContext } from "../../context/AdminContext";
 import { adminApi } from "../../api/admin-api";
 import { useNavigate } from "react-router-dom";

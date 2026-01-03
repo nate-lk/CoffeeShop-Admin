@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
 import { Edit, Trash2, ChevronLeft, ChevronRight, Package, Search, Filter } from "lucide-react";

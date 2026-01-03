@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Routes, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "sonner";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar.jsx";
 import Sidebar from "./components/Sidebar.jsx";
@@ -28,10 +28,16 @@ export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
   const { token } = useContext(AdminContext);
   useClickGuard(250);
-  
+
   return (
     <div className="bg-gray-50 min-h-screen">
-      <ToastContainer position="top-left" autoClose={1200} />
+      <Toaster
+        position="top-center"
+        richColors
+        expand={true}
+        closeButton
+        duration={1500} // 1.5 seconds
+      />
       {token === "" ? (
         <Login />
       ) : (

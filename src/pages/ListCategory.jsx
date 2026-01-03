@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Edit, Trash2, Layers, Search } from "lucide-react";
 import { categoryApi } from "../../api/category-api";

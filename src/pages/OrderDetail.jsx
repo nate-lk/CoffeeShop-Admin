@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Swal from "sweetalert2";
 import { AdminContext } from "../../context/AdminContext";
 import { orderApi } from "../../api/order-api";

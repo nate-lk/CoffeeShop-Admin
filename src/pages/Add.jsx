@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { assets } from "../assets/assets";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { AdminContext } from "../../context/AdminContext";
 import { categoryApi } from "../../api/category-api";
 import { productApi } from "../../api/product-api";

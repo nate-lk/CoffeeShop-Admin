@@ -1,6 +1,6 @@
 import { Wrench } from "lucide-react";
 import { categoryApi } from "../../api/category-api";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useContext } from "react";
 import { AdminContext } from "../../context/AdminContext";
 

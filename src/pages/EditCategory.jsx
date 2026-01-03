@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { assets } from "../assets/assets";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useParams } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
 import { useNavigate } from "react-router-dom";
