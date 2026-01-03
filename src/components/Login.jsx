@@ -28,7 +28,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error("Thông tin đăng nhập không đúng");
     } finally {
       setLoading(false);
     }
