@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
 import { useNavigate } from "react-router-dom";
 import { categoryApi } from "../../api/category-api";
+import { Edit, Upload, Type, FileText, CheckCircle, Image as ImageIcon } from "lucide-react";
 
 const EditCategory = () => {
   const { categoryId } = useParams();
@@ -15,6 +16,7 @@ const EditCategory = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
+  // --- LOGIC (UNCHANGED) ---
   const fetchCategory = async () => {
     try {
       const res = await categoryApi.getOneCategory(categoryId);
@@ -32,7 +34,7 @@ const EditCategory = () => {
       }
     } catch (err) {
       console.error(err);
-      toast.error(error.message);
+      toast.error(err.message);
     }
   };
 
@@ -68,98 +70,105 @@ const EditCategory = () => {
     }
   };
 
+  // Helper for safe image preview (Handles URL string vs File object)
+  const renderPreview = () => {
+    if (!image1) return assets.upload_area;
+    if (typeof image1 === "string") return image1; // Existing image URL from DB
+    return URL.createObjectURL(image1); // New file upload
+  };
+
   return (
-    <div className="bg-white p-6   shadow-md w-full max-w-2xl mx-auto">
-      <h1 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-        Chỉnh Sửa Phân Loại
-      </h1>
+    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
+      
+      {/* Header */}
+      <div className="w-full max-w-2xl mb-6">
+        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          <Edit className="text-amber-700" /> Chỉnh sửa phân loại
+        </h1>
+        <p className="text-gray-500 text-sm mt-1">Cập nhật thông tin và hình ảnh cho danh mục này.</p>
+      </div>
 
-      <form
-        onSubmit={onSubmitHandler}
-        className="flex flex-col gap-6 text-gray-700"
-      >
-        {/* Upload Image */}
-        <div className="w-full">
-          <p className="mb-2 font-medium">
-            <strong>
-              Tải lên hình ảnh{" "}
-              <span className="text-red-600 ml-1 font-bold text-lg">*</span>
-            </strong>
-          </p>
-          <div className="flex gap-3 flex-wrap">
-            {(Array.isArray([image1]) ? [image1] : []).map((img, i) => (
-              <label key={i} htmlFor={`image${i + 1}`}>
-                <img
-                  className="w-24 h-24 object-cover   border border-gray-300 cursor-pointer hover:opacity-80"
-                  src={
-                    !img
-                      ? assets.upload_area
-                      : img instanceof File
-                      ? URL.createObjectURL(img)
-                      : typeof img === "string"
-                      ? img
-                      : assets.upload_area
-                  }
-                  alt="Upload preview"
-                />
-                <input
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (i === 0) setImage1(file);
-                  }}
-                  type="file"
-                  id={`image${i + 1}`}
-                  hidden
-                />
-              </label>
-            ))}
+      {/* Main Card */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 w-full max-w-2xl">
+        <form onSubmit={onSubmitHandler} className="space-y-8">
+          
+          {/* Image Upload Section */}
+          <div className="space-y-3">
+             <label className="block text-sm font-bold text-gray-700 flex items-center gap-2">
+                <ImageIcon size={16} className="text-gray-400" /> Hình ảnh đại diện <span className="text-red-500">*</span>
+             </label>
+             
+             <label
+              htmlFor="image1"
+              className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-amber-400 transition-all relative overflow-hidden group"
+            >
+              {/* Image Preview */}
+              <img
+                className="w-full h-full object-contain p-4 transition-transform group-hover:scale-105"
+                src={renderPreview()}
+                alt="Category Preview"
+              />
+              
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center">
+                 <div className="bg-white/90 p-3 rounded-full opacity-0 group-hover:opacity-100 shadow-sm transition-opacity">
+                    <Upload size={20} className="text-amber-700" />
+                 </div>
+              </div>
+              
+              <input
+                onChange={(e) => setImage1(e.target.files[0])}
+                type="file"
+                id="image1"
+                hidden
+              />
+            </label>
+            <p className="text-xs text-center text-gray-400">Nhấn vào ảnh để thay đổi</p>
           </div>
-        </div>
 
-        {/* Category Name */}
-        <div>
-          <p className="mb-2 font-medium">
-            <strong>
-              Tên phân loại{" "}
-              <span className="text-red-600 ml-1 font-bold text-lg">*</span>
-            </strong>
-          </p>
-          <input
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            type="text"
-            placeholder="Enter category name"
-            required
-          />
-        </div>
+          <div className="grid gap-6">
+            {/* Name Input */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
+                 <Type size={16} className="text-gray-400" /> Tên phân loại <span className="text-red-500">*</span>
+              </label>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none"
+                type="text"
+                placeholder="Nhập tên phân loại"
+                required
+              />
+            </div>
 
-        {/* Category Description */}
-        <div>
-          <p className="mb-2 font-medium">
-            <strong>
-              Mô tả phân loại{" "}
-              <span className="text-red-600 ml-1 font-bold text-lg">*</span>
-            </strong>
-          </p>
-          <textarea
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
-            className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            rows="3"
-            placeholder="Enter category description"
-            required
-          />
-        </div>
+            {/* Description Input */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
+                 <FileText size={16} className="text-gray-400" /> Mô tả <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all outline-none min-h-[120px]"
+                rows="3"
+                placeholder="Nhập mô tả phân loại"
+                required
+              />
+            </div>
+          </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          className="w-32 py-2.5 bg-[#3e2723] text-white  hover:bg-[#4e342e] transition-colors"
-        >
-          CHỈNH SỬA
-        </button>
-      </form>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full py-4 bg-[#3e2723] hover:bg-[#5d4037] text-white font-bold rounded-xl shadow-lg shadow-amber-900/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
+            <CheckCircle size={20} />
+            LƯU THAY ĐỔI
+          </button>
+
+        </form>
+      </div>
     </div>
   );
 };

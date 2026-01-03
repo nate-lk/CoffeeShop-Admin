@@ -43,7 +43,7 @@ const AdminContextProvider = (props) => {
 
   return (
     <AdminContext.Provider value={value}>
-      {showLoading && <LoadingOverlay />}
+      {/* {showLoading && <LoadingOverlay />} */}
       {props.children}
     </AdminContext.Provider>
   );
