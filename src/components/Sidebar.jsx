@@ -14,12 +14,12 @@ import {
 const Sidebar = () => {
   // Define menu structure for cleaner rendering
   const menuGroups = [
-    {
-      title: "Tổng quan",
-      items: [
-        { path: "/", label: "Báo cáo", icon: LayoutDashboard },
-      ],
-    },
+    // {
+    //   title: "Tổng quan",
+    //   items: [
+    //     { path: "/", label: "Báo cáo", icon: LayoutDashboard },
+    //   ],
+    // },
     {
       title: "Sản phẩm & Kho",
       items: [
