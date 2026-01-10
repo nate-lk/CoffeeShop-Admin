@@ -41,7 +41,7 @@ export const productApi = {
   },
 
 
-  // deleteProduct(productId) {
-  //   return apiAuth.delete(`${BASE}/stock/${productId}`);
-  // }
+  deleteProduct(productId) {
+    return apiAuth.delete(`${BASE}/delete/${productId}`);
+  }
 };

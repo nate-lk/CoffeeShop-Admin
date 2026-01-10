@@ -35,28 +35,26 @@ const List = () => {
     }
   };
 
-  // const removeProduct = async (id) => {
-  //   if (!window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) return;
+  const removeProduct = async (id) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) return;
 
-  //   try {
-  //     setLoading(true);
-  //     const response = await axios.post(API_delete, { id }, { // Usually delete endpoints use POST with body or DELETE with params, kept as axios based on your snippet
-  //       headers: { token }, // Note: Check if your backend expects 'token' or 'Authorization: Bearer...'
-  //     });
+    try {
+      setLoading(true);
+      const response = await productApi.deleteProduct(id, token);
 
-  //     if (response.data.success) {
-  //       toast.success(response.data.message);
-  //       await fetchList();
-  //     } else {
-  //       toast.error(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      if (response.data.success) {
+        toast.success(response.data.message);
+        await fetchList();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const editProduct = (id) => {
     navigate(`/edit/${id}`);
@@ -156,13 +154,13 @@ const List = () => {
                         >
                           <Edit size={18} />
                         </button>
-                        {/* <button
+                        <button
                           onClick={() => removeProduct(item._id)}
                           className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                           title="Xóa"
                         >
                           <Trash2 size={18} />
-                        </button> */}
+                        </button>
                       </div>
                     </td>
                   </tr>
