@@ -177,9 +177,9 @@ const Home = () => {
       </div>
 
       {/* --- CHARTS SECTION --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 gap-8 mb-8">
         {/* Sales Trend */}
-        <div className="bg-white p-6   shadow-sm border border-gray-100">
+        <div className="bg-white p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-bold text-gray-800 mb-4">
             Theo dõi doanh thu (30 ngày gần đây)
           </h3>
@@ -188,8 +188,16 @@ const Home = () => {
               <LineChart data={salesData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" />
-                <YAxis prefix="₫" />
-                <Tooltip formatter={(value) => `${value.toLocaleString()} ₫`} />
+                <YAxis
+                  tickFormatter={(value) =>
+                    `${(value / 1_000_000).toFixed(1)}M ₫`
+                  }
+                />
+
+                <Tooltip
+                  formatter={(value) => `${(value / 1_000_000).toFixed(1)}M ₫`}
+                />
+
                 <Line
                   type="monotone"
                   dataKey="sales"
@@ -203,7 +211,7 @@ const Home = () => {
         </div>
 
         {/* Order Status Distribution */}
-        <div className="bg-white p-6   shadow-sm border border-gray-100">
+        {/* <div className="bg-white p-6   shadow-sm border border-gray-100">
           <h3 className="text-lg font-bold text-gray-800 mb-4">
             Tình trạng đơn hàng
           </h3>
@@ -231,11 +239,11 @@ const Home = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* --- BOTTOM SECTION: TABLES & LISTS --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8">
         {/* Recent Orders Table */}
         {/* <div className="lg:col-span-2 bg-white   shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-100 flex justify-between items-center">
