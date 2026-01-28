@@ -3,16 +3,14 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
-import { Edit, Trash2, ChevronLeft, ChevronRight, Package, Search, Filter } from "lucide-react";
+// Added 'Plus' to imports
+import { Edit, Trash2, ChevronLeft, ChevronRight, Package, Search, Filter, Plus } from "lucide-react";
 import { productApi } from "../../api/product-api";
-import { backendUrl } from "../App"; // Ensure this import is correct based on your file structure
+import { backendUrl } from "../App"; 
 
 const List = () => {
   const { token, currency, setLoading } = useContext(AdminContext);
   const navigate = useNavigate();
-  
-  // Fixed: Define API_delete properly
-  // const API_delete = `${backendUrl}/api/product/delete`;
   
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -21,7 +19,6 @@ const List = () => {
 
   const fetchList = async () => {
     try {
-      // Optional: setLoading(true) here if you want a loader on every page change
       const response = await productApi.getProduct(page, limit);
       if (response.data.success) {
         setList(response.data.products);
@@ -76,22 +73,35 @@ const List = () => {
           <p className="text-gray-500 text-sm mt-1">Quản lý kho hàng và danh mục sản phẩm.</p>
         </div>
         
-        {/* Simple Filter/Limit Controls */}
-        <div className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-gray-200">
-          <span className="text-sm text-gray-500 pl-2">Hiển thị:</span>
-          <select
-            className="bg-gray-50 border-none text-sm font-medium focus:ring-0 cursor-pointer rounded-md py-1"
-            value={limit}
-            onChange={(e) => {
-              setLimit(Number(e.target.value));
-              setPage(1);
-            }}
+        {/* Actions Group: Add Button + Filter */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          
+          {/* NEW BUTTON: Navigate to Add Product */}
+          <button
+            onClick={() => navigate('/add')} 
+            className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium text-sm"
           >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
+            <Plus size={18} />
+            Thêm sản phẩm
+          </button>
+
+          {/* Existing Filter Controls */}
+          <div className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-gray-200">
+            <span className="text-sm text-gray-500 pl-2">Hiển thị:</span>
+            <select
+              className="bg-gray-50 border-none text-sm font-medium focus:ring-0 cursor-pointer rounded-md py-1"
+              value={limit}
+              onChange={(e) => {
+                setLimit(Number(e.target.value));
+                setPage(1);
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -134,7 +144,6 @@ const List = () => {
                       {item.price.toLocaleString()} {currency}
                     </td>
                     <td className="px-6 py-4 text-center">
-                       {/* Stock Badge Logic */}
                       <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-bold ${
                         item.stock > 10 
                             ? "bg-green-50 text-green-700" 
@@ -167,7 +176,7 @@ const List = () => {
                 ))
               ) : (
                 <tr>
-                  <td colspan="6" className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
                     <div className="flex flex-col items-center justify-center gap-2">
                         <Search size={32} className="opacity-20" />
                         <p>Không tìm thấy sản phẩm nào.</p>

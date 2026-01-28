@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { Edit, Trash2, Layers, Search } from "lucide-react";
+// Added 'Plus' to imports
+import { Edit, Trash2, Layers, Search, Plus } from "lucide-react";
 import { categoryApi } from "../../api/category-api";
 
 const ListCategory = () => {
@@ -54,12 +55,23 @@ const ListCategory = () => {
   return (
     <div className="w-full p-6 bg-gray-50 min-h-screen">
       
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Layers className="text-amber-700" /> Quản lý danh mục
-        </h1>
-        <p className="text-gray-500 text-sm mt-1">Danh sách các phân loại sản phẩm trong hệ thống.</p>
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <Layers className="text-amber-700" /> Quản lý danh mục
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">Danh sách các phân loại sản phẩm trong hệ thống.</p>
+        </div>
+
+        {/* NEW BUTTON: Navigate to Add Category */}
+        <button
+            onClick={() => navigate('/add-category')} 
+            className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium text-sm"
+          >
+            <Plus size={18} />
+            Thêm danh mục
+        </button>
       </div>
 
       {/* Main Card */}
