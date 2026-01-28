@@ -5,6 +5,7 @@ const BASE = import.meta.env.VITE_API_ADMIN;
 /*
 VITE_API_ADMIN=http://localhost:4000/api/admin
 */
+
 const apiPublic = axios.create({
   withCredentials: true,
   headers: {
@@ -28,4 +29,16 @@ export const adminApi = {
     console.log(url)
     return apiAuth.post(url, {});
   },
+
+  getReports() {
+    return apiAuth.get(`${BASE}/get-report`);
+  },
+
+  fetchLiveReport() {
+    return apiAuth.get(`${BASE}/fetch-report`);
+  },
+
+  createReportRecord(reportData) {
+    return apiAuth.post(`${BASE}/create-report`, reportData);
+  }
 };

@@ -14,12 +14,12 @@ import {
 const Sidebar = () => {
   // Define menu structure for cleaner rendering
   const menuGroups = [
-    // {
-    //   title: "Tổng quan",
-    //   items: [
-    //     { path: "/", label: "Báo cáo", icon: LayoutDashboard },
-    //   ],
-    // },
+    {
+      title: "Tổng quan",
+      items: [
+        { path: "/", label: "Báo cáo", icon: LayoutDashboard },
+      ],
+    },
     {
       title: "Sản phẩm & Kho",
       items: [
@@ -35,12 +35,12 @@ const Sidebar = () => {
         { path: "/orders", label: "Đơn hàng", icon: ShoppingBag },
       ],
     },
-    {
-      title: "Hệ thống",
-      items: [
-        { path: "/utilities", label: "Tiện ích", icon: Wrench },
-      ],
-    },
+    // {
+    //   title: "Hệ thống",
+    //   items: [
+    //     { path: "/utilities", label: "Tiện ích", icon: Wrench },
+    //   ],
+    // },
   ];
 
   return (

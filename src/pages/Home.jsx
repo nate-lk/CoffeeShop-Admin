@@ -27,37 +27,87 @@ import {
 } from "lucide-react";
 import StatCard from "../components/StatCard";
 import { orderApi } from "../../api/order-api";
+import { adminApi } from "../../api/admin-api";
+import { toast } from "sonner";
 
 const Home = () => {
   const [orderList, setOrderList] = useState([]);
+
+  /*
+  Data included here:
+  1. metrics: 4 numbers
+  */
   const [metrics, setMetrics] = useState({
     totalRevenue: 0,
     totalOrders: 0,
     pendingOrders: 0,
     avgOrderValue: 0,
-  });
-  const [salesData, setSalesData] = useState([]);
-  const [bestSellers, setBestSellers] = useState([]);
+  }); // objects of 4 numbers
+  const [salesData, setSalesData] = useState([]); // arrays of objects
+  const [bestSellers, setBestSellers] = useState([]); // arrays of objects
   const [statusDistribution, setStatusDistribution] = useState([]);
+  const [reportData, setReportData] = useState({});
 
   // COLORS for Pie Chart
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
+
+  useEffect(() => {
+    const initDashboard = async () => {
+      try {
+        const response = await adminApi.getReports();
+
+        console.log("Full API Response:", response.data); // Debugging check
+
+        // Structure: { success: true, data: { metrics: {...}, salesData: [...] } }
+        if (response.data && response.data.success && response.data.data) {
+          const latestReport = response.data.data; // Direct access to the object
+
+          // Check if salesData exists in this object
+          if (latestReport.salesData && latestReport.salesData.length > 0) {
+            console.log("✅ Loaded valid report from Database");
+
+            setMetrics(latestReport.metrics);
+            setSalesData(latestReport.salesData);
+            setBestSellers(latestReport.bestSellers);
+            setReportData(latestReport);
+            return; // Exit, success!
+          }
+        }
+
+        // Fallback: If data.data is null or salesData is empty
+        console.log(
+          "⚠️ Database report missing or empty. Fetching fresh data...",
+        );
+        await fetchAndProcessOrders();
+      } catch (error) {
+        console.error("Error initializing dashboard:", error);
+      }
+    };
+
+    initDashboard();
+  }, []);
+
   const processData = (data) => {
-    // 1. Calculate KPIs
+    // --- 1. Calculate KPIs (Local Variables) ---
     const totalRevenue = data.reduce(
-      (acc, order) => acc + (order.status == "PAID" ? order.total : 0),
-      0
+      (acc, order) => acc + (order.status === "PAID" ? order.total : 0),
+      0,
     );
     const totalOrders = data.length;
     const pendingOrders = data.filter(
-      (o) => o.status === "PENDING_PAYMENT" || o.status === "PROCESSING"
+      (o) => o.status === "PENDING_PAYMENT" || o.status === "PROCESSING",
     ).length;
     const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    setMetrics({ totalRevenue, totalOrders, pendingOrders, avgOrderValue });
+    // Create a local object for metrics
+    const newMetrics = {
+      totalRevenue,
+      totalOrders,
+      pendingOrders,
+      avgOrderValue,
+    };
 
-    // 2. Prepare Sales Over Time (Line Chart)
-    // Grouping by Date (simplified for demo)
+    // --- 2. Prepare Sales Over Time (Local Variables) ---
     const salesMap = {};
     data.forEach((order) => {
       const date = new Date(order.createdAt).toLocaleDateString("en-US", {
@@ -65,72 +115,123 @@ const Home = () => {
         day: "numeric",
       });
       if (!salesMap[date]) salesMap[date] = 0;
-      if (order.status == "PAID") salesMap[date] += order.total;
+      if (order.status === "PAID") salesMap[date] += order.total;
     });
-    const salesChartData = Object.keys(salesMap)
+
+    // Create local array for sales
+    const newSalesData = Object.keys(salesMap)
       .sort((a, b) => new Date(a) - new Date(b))
       .map((key) => ({
         name: key,
         sales: salesMap[key],
-      }));
-    setSalesData(salesChartData.slice(-30)); // Last 7 days/entries
+      }))
+      .slice(-30);
 
-    // 3. Best Selling Products (Bar Chart logic)
+    // --- 3. Best Sellers (Local Variables) ---
     const productMap = {};
     data.forEach((order) => {
-      if (order.status == "PAID") {
+      if (order.status === "PAID") {
         order.items.forEach((item) => {
           if (!productMap[item.name]) productMap[item.name] = 0;
           productMap[item.name] += item.quantity;
         });
       }
     });
-    const bestSellingData = Object.keys(productMap)
+
+    // Create local array for best sellers
+    const newBestSellers = Object.keys(productMap)
       .map((key) => ({ name: key, quantity: productMap[key] }))
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
-    setBestSellers(bestSellingData);
 
-    // 4. Order Status Distribution (Pie Chart)
+    // --- 4. Order Status (Local Variables) ---
     const statusMap = {};
     data.forEach((order) => {
       if (!statusMap[order.status]) statusMap[order.status] = 0;
       statusMap[order.status] += 1;
     });
-    const statusChartData = Object.keys(statusMap).map((key, index) => ({
+    const newStatusDistribution = Object.keys(statusMap).map((key) => ({
       name: key,
       value: statusMap[key],
     }));
-    setStatusDistribution(statusChartData);
+
+    // --- NOW UPDATE STATE ---
+    // Update individual states for UI rendering
+    setMetrics(newMetrics);
+    setSalesData(newSalesData);
+    setBestSellers(newBestSellers);
+    setStatusDistribution(newStatusDistribution);
+
+    // Update reportData using the LOCAL variables (newMetrics, newSalesData, etc.)
+    // NOT the state variables
+    const finalReport = {
+      metrics: newMetrics,
+      salesData: newSalesData,
+      bestSellers: newBestSellers,
+    };
+
+    setReportData(finalReport);
+
+    console.log("Report Data prepared:", finalReport);
+
+    return finalReport;
   };
 
   const fetchAndProcessOrders = async () => {
+    // 1. Loading State (Optional: good for UX)
+    // toast.info("Đang cập nhật dữ liệu...");
+
     const maxRetries = 3;
-    const backoff = 300; // ms
+    const backoff = 300;
     let attempt = 0;
 
     while (attempt < maxRetries) {
       try {
+        // Step A: Get fresh orders
         const response = await orderApi.getAllOrder(1, 1000);
-        const data = response.data;
-        // const orderData = data.orders;
-        // console.log("Fetched orders:", orderData);
-        // Update state and process
-        // setOrderList(orderData);
-        // console.log("Orders prepare for process:", orderList);
-        processData(data.orders);
 
-        return; // success → exit loop
+        if (response.data && response.data.orders) {
+          // Step B: Calculate new numbers
+          const readyToSaveData = processData(response.data.orders);
+
+          // Step C: Send to Backend
+          // Note: If your backend is "Upserting", this response might return the UPDATED doc, not a new ID.
+          const createReportResponse =
+            await adminApi.createReportRecord(readyToSaveData);
+
+          console.log("Server Response:", createReportResponse.data);
+
+          if (createReportResponse.data.success) {
+            // UPDATE THE UI STATE IMMEDIATELY with the response from server
+            // This ensures if the server added a timestamp, we see it.
+            const savedReport =
+              createReportResponse.data.data ||
+              createReportResponse.data.report;
+
+            if (savedReport) {
+              setReportData(savedReport);
+              // If the backend returns the full object, ensure metrics are synced
+              if (savedReport.metrics) setMetrics(savedReport.metrics);
+            }
+
+            // Notify user
+            toast.success("Cập nhật báo cáo thành công!");
+           
+            return;
+          }
+        }
+        // If data was empty or success was false, we might want to retry or throw
+        throw new Error("API did not return success");
       } catch (err) {
+        console.error(`Attempt ${attempt + 1} failed:`, err.message);
         attempt++;
         if (attempt < maxRetries) {
-          // wait before retrying
           await new Promise((res) => setTimeout(res, backoff));
           continue;
         }
-
-        // after all retries fail → log silently
-        console.error("Failed to fetch orders after retries:", err.message);
+        // Final failure
+        // toast.error("Không thể cập nhật báo cáo.");
+        console.error("Failed to update report");
       }
     }
   };
