@@ -40,8 +40,7 @@ const Navbar = () => {
       
       {/* Left: Logo & Mobile Menu Toggle */}
       <div className="flex items-center gap-4">
-        {/* Mobile menu icon (Visual placeholder for responsive expansion) */}
-        <button className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+        {/* <button className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
            <Menu size={20} />
         </button>
         
@@ -49,11 +48,11 @@ const Navbar = () => {
           className="h-8 sm:h-10 w-auto object-contain"
           src={assets.logo}
           alt="Velvet Roast Logo"
-        />
+        /> */}
       </div>
 
       {/* Center: Search Bar (Hidden on mobile) */}
-      <div className="hidden md:flex flex-1 max-w-md mx-8">
+      {/* <div className="hidden md:flex flex-1 max-w-md mx-8">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
@@ -62,26 +61,26 @@ const Navbar = () => {
             className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-100 transition-all text-sm"
           />
         </div>
-      </div>
+      </div> */}
 
       {/* Right: Actions */}
       <div className="flex items-center gap-3 sm:gap-5">
         
         {/* Notification Icon */}
-        <button className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors">
+        {/* <button className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors">
           <Bell size={20} />
           <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-        </button>
+        </button> */}
 
         {/* Divider */}
-        <div className="h-6 w-[1px] bg-gray-200 hidden sm:block"></div>
+        {/* <div className="h-6 w-[1px] bg-gray-200 hidden sm:block"></div> */}
 
         {/* Profile & Logout */}
         <div className="flex items-center gap-3">
           {/* Avatar Circle */}
-          <div className="w-8 h-8 sm:w-9 sm:h-9 bg-amber-100 rounded-full flex items-center justify-center text-amber-700 border border-amber-200 shadow-sm">
+          {/* <div className="w-8 h-8 sm:w-9 sm:h-9 bg-amber-100 rounded-full flex items-center justify-center text-amber-700 border border-amber-200 shadow-sm">
              <User size={18} />
-          </div>
+          </div> */}
 
           <button
             onClick={handleLogout}
