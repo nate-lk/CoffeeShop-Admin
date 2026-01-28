@@ -47,6 +47,7 @@ const Home = () => {
   const [bestSellers, setBestSellers] = useState([]); // arrays of objects
   const [statusDistribution, setStatusDistribution] = useState([]);
   const [reportData, setReportData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   // COLORS for Pie Chart
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
@@ -177,6 +178,38 @@ const Home = () => {
     return finalReport;
   };
 
+  const hasFetched = React.useRef(false); // Add this ref
+
+  useEffect(() => {
+    // If we already tried fetching, don't do it again
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const initDashboard = async () => {
+      try {
+        const response = await adminApi.getReports();
+
+        if (response.data && response.data.success && response.data.data) {
+          const latestReport = response.data.data;
+          if (latestReport.salesData && latestReport.salesData.length > 0) {
+            setMetrics(latestReport.metrics);
+            setSalesData(latestReport.salesData);
+            setBestSellers(latestReport.bestSellers);
+            setReportData(latestReport);
+            return;
+          }
+        }
+
+        console.log("⚠️ Database report missing. Fetching fresh data...");
+        await fetchAndProcessOrders();
+      } catch (error) {
+        console.error("Error initializing dashboard:", error);
+      }
+    };
+
+    initDashboard();
+  }, []); // Empty dependency array
+
   const fetchAndProcessOrders = async () => {
     // 1. Loading State (Optional: good for UX)
     // toast.info("Đang cập nhật dữ liệu...");
@@ -216,7 +249,7 @@ const Home = () => {
 
             // Notify user
             toast.success("Cập nhật báo cáo thành công!");
-           
+
             return;
           }
         }
@@ -236,6 +269,17 @@ const Home = () => {
     }
   };
 
+  const formatCompactNumber = (number) => {
+    if (number >= 1_000_000_000) {
+      return `${(number / 1_000_000_000).toFixed(2)} Tỷ`;
+    } else if (number >= 1_000_000) {
+      return `${(number / 1_000_000).toFixed(2)} Tr`;
+    } else if (number >= 1_000) {
+      return `${(number / 1_000).toFixed(1)} K`;
+    }
+    return number.toLocaleString("vi-VN");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <header className="mb-8 flex items-center justify-between">
@@ -252,19 +296,22 @@ const Home = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Tổng doanh thu"
-          value={`${metrics.totalRevenue.toLocaleString()} ₫`}
+          // Shows "1.2 Tỷ" or "500 Tr"
+          value={formatCompactNumber(metrics.totalRevenue)}
           icon={DollarSign}
           colorClass="bg-green-500"
         />
         <StatCard
           title="Tổng đơn hàng"
+          // Standard number is usually fine here, but you can format if needed
           value={metrics.totalOrders}
           icon={ShoppingBag}
           colorClass="bg-blue-500"
         />
         <StatCard
           title="Doanh thu trung bình"
-          value={`${Math.floor(metrics.avgOrderValue).toLocaleString()} ₫`}
+          // Shows "150 K" instead of "150,000 ₫"
+          value={formatCompactNumber(metrics.avgOrderValue)}
           icon={TrendingUp}
           colorClass="bg-purple-500"
         />
