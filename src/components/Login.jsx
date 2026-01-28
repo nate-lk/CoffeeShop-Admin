@@ -22,7 +22,7 @@ const Login = () => {
         setEmail("");
         setPassword("");
         // toast.success("Đăng nhập Admin thành công");
-        navigate("/list");
+        navigate("/");
       } else {
         toast.error(response.data.message);
       }
